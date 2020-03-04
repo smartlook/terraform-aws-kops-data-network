@@ -13,16 +13,6 @@ data "aws_vpc" "kops" {
   }
 }
 
-# kops 1.11 private subnet gets KC and k/c tag + SubnetType = "Private". kops 1.12 drops KC tag.
-data "aws_subnet_ids" "private" {
-  count  = var.enabled ? 1 : 0
-  vpc_id = local.vpc_id
-
-  tags = {
-    "kubernetes.io/role/internal-elb" = "1"
-  }
-}
-
 # kops 1.11 private subnet gets KC and k/c tag + SubnetType = "Utility". kops 1.12 drops KC tag.
 data "aws_subnet_ids" "utility" {
   count  = var.enabled ? 1 : 0
