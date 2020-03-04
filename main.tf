@@ -13,16 +13,6 @@ data "aws_vpc" "kops" {
   }
 }
 
-# kops 1.11 private subnet gets KC and k/c tag + SubnetType = "Private". kops 1.12 drops KC tag.
-data "aws_subnet_ids" "private" {
-  count  = "${var.enabled == "true" ? 1 : 0}"
-  vpc_id = "${local.vpc_id}"
-
-  tags {
-    "kubernetes.io/role/internal-elb" = "1"
-  }
-}
-
 # kops 1.11 private subnet gets KC and k/c tag + SubnetType = "Utility". kops 1.12 drops KC tag.
 data "aws_subnet_ids" "utility" {
   count  = "${var.enabled == "true" ? 1 : 0}"
@@ -32,18 +22,6 @@ data "aws_subnet_ids" "utility" {
     "kubernetes.io/role/elb" = "1"
   }
 }
-
-# kops 1.11 & 1.12 SG bastion gets KC and k/c tag plus Name = bastion.clustername
-data "aws_security_group" "bastion" {
-  count  = "${var.enabled == "true" ? 1 : 0}"
-  vpc_id = "${data.aws_vpc.kops.id}"
-  name   = "bastion.${var.cluster_name}"
-
-  tags {
-    Name = "bastion.${var.cluster_name}"
-  }
-}
-
 # kops 1.11 & 1.12 SG masters gets KC and k/c tag plus Name = masters.clustername
 data "aws_security_group" "masters" {
   count  = "${var.enabled == "true" ? 1 : 0}"
