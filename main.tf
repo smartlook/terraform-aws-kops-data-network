@@ -23,17 +23,6 @@ data "aws_subnet_ids" "utility" {
   }
 }
 
-# kops 1.11 & 1.12 SG bastion gets KC and k/c tag plus Name = bastion.clustername
-data "aws_security_group" "bastion" {
-  count  = var.enabled ? 1 : 0
-  vpc_id = local.vpc_id
-  name   = "bastion.${var.cluster_name}"
-
-  tags = {
-    Name = "bastion.${var.cluster_name}"
-  }
-}
-
 # kops 1.11 & 1.12 SG masters gets KC and k/c tag plus Name = masters.clustername
 data "aws_security_group" "masters" {
   count  = var.enabled ? 1 : 0
